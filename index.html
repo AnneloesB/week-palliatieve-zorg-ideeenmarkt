@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Inspiratie- en ideeenmarkt | Week van de Palliatieve Zorg 2026</title>
+<meta name="author" content="Anneloes Bork">
+<link rel="stylesheet" href="style.css">
+<style>
+  html,body{height:auto;min-height:100%;overflow:visible;}
+  body{background:var(--pal);margin:0;font-family:inherit;display:block;overflow-y:auto;}
+  .ideas-wrap{max-width:1180px;margin:0 auto;padding:28px 24px 60px;}
+  .ideas-hdr{margin-bottom:18px;}
+  .ideas-title{font-size:30px;font-weight:800;color:var(--dk);margin:0 0 8px;}
+  .ideas-sub{font-size:16px;color:#555;line-height:1.6;max-width:900px;margin:0;}
+  .filter-bar{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end;
+    background:#fff;border:1.5px solid var(--lt);border-radius:10px;padding:16px 18px;margin:20px 0 28px;}
+  .filter-grp{display:flex;flex-direction:column;gap:6px;}
+  .filter-lbl{font-size:10.5px;font-weight:800;color:var(--dk);text-transform:uppercase;letter-spacing:.05em;}
+  .filter-grp select{font-size:12px;padding:7px 10px;border:1.5px solid var(--lt);border-radius:6px;
+    background:var(--pal);color:var(--tx);font-weight:600;min-width:210px;}
+  .filter-reset{align-self:flex-end;font-size:11.5px;font-weight:700;color:var(--md);
+    background:none;border:1.5px solid var(--lt);border-radius:20px;padding:8px 14px;cursor:pointer;}
+  .filter-reset:hover{background:var(--pal);}
+  .idea-count{font-size:11px;color:#888;margin-left:auto;align-self:center;}
+
+  .stage-sec{margin-bottom:34px;}
+  .stage-hd{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .stage-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0;}
+  .stage-lbl{font-size:19px;font-weight:800;color:var(--dk);}
+  .stage-line{flex:1;height:1.5px;background:var(--lt);}
+  .stage-desc{font-size:13.5px;color:#777;margin:-4px 0 14px 23px;}
+
+  .idea-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .idea{border:1.5px solid var(--lt);border-radius:9px;background:#fff;padding:12px 13px 11px;
+    display:flex;flex-direction:column;transition:box-shadow .15s;}
+  .idea:hover{box-shadow:0 3px 14px rgba(0,0,0,.08);}
+  .idea.hidden{display:none;}
+  .idea-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
+  .idea-tag{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.04em;
+    text-transform:uppercase;border-radius:3px;padding:2px 7px;}
+  .tag-org{background:var(--pal);color:var(--dk);border:1px solid var(--lt);}
+  .tag-regio{background:#eef4fb;color:#2a6fa5;border:1px solid #cfe2f2;}
+  .tag-bron{background:var(--gl);color:var(--dk);}
+  .tag-doelgroep{background:#f4f4f2;color:#888;border:1px solid #e4e4e0;font-weight:700;}
+  .idea-nm{font-size:14.5px;font-weight:800;color:var(--dk);margin-bottom:5px;line-height:1.3;}
+  .idea-rl{height:1px;background:var(--lt);margin-bottom:7px;}
+  .idea-ds{font-size:12.5px;line-height:1.55;color:#4a4a4a;flex:1;}
+  .idea-lk{font-size:12px;font-weight:700;color:var(--md);margin-top:6px;text-decoration:none;display:inline-block;}
+  .idea-lk:hover{text-decoration:underline;}
+  .idea-meta{font-size:11px;color:#999;margin-top:8px;font-style:italic;}
+  .idea-contact{margin-top:9px;padding-top:8px;border-top:1px dashed var(--lt);
+    display:flex;flex-direction:column;gap:2px;}
+  .idea-contact-lbl{font-size:10px;font-weight:800;color:#999;text-transform:uppercase;letter-spacing:.04em;}
+  .idea-contact-nm{font-size:13px;font-weight:700;color:var(--dk);}
+  .idea-contact a{font-size:13.5px;color:var(--md);text-decoration:none;font-weight:600;}
+  .idea-contact a:hover{text-decoration:underline;}
+  .idea-contact-tel{font-size:13.5px;color:#777;}
+
+  .strat-box{background:#fff;border:1.5px solid var(--lt);border-radius:10px;padding:20px 22px;margin-top:8px;}
+  .strat-box h3{font-size:18px;font-weight:800;color:var(--dk);margin:0 0 6px;}
+  .strat-box p.strat-intro{font-size:14px;color:#777;margin:0 0 14px;}
+  .strat-box ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:11px;}
+  .strat-box li{font-size:14.5px;line-height:1.6;color:#444;}
+  .strat-box li strong{color:var(--dk);}
+
+  .ideas-ftr{margin-top:36px;font-size:12.5px;color:#999;text-align:center;}
+
+  /* MODE TABS */
+  .mode-tabs{display:flex;gap:8px;margin:0 0 22px;}
+  .mode-tab{font-size:14px;font-weight:800;color:var(--md);background:#fff;
+    border:1.5px solid var(--lt);border-radius:20px;padding:9px 18px;cursor:pointer;}
+  .mode-tab.active{background:var(--dk);color:#fff;border-color:var(--dk);}
+
+  /* SESSION MODE */
+  #mode-session{display:none;}
+  .sess-phase{background:#fff;border:1.5px solid var(--lt);border-radius:10px;
+    padding:20px 22px;margin-bottom:22px;}
+  .sess-phase-hd{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+  .sess-badge{font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;
+    color:#fff;background:var(--md);border-radius:20px;padding:4px 12px;white-space:nowrap;}
+  .sess-phase-title{font-size:18px;font-weight:800;color:var(--dk);}
+  .sess-intro p{font-size:14px;line-height:1.6;color:#4a4a4a;margin:0 0 8px;}
+  .sess-agenda{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+  .sess-agenda-item{flex:1;min-width:160px;background:var(--pal);border:1px solid var(--lt);
+    border-radius:8px;padding:10px 12px;font-size:12.5px;color:var(--dk);font-weight:700;}
+  .sess-agenda-item span{display:block;font-weight:400;color:#666;margin-top:2px;}
+
+  .regio-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+  .regio-tab{font-size:13px;font-weight:700;color:var(--dk);background:var(--pal);
+    border:1.5px solid var(--lt);border-radius:18px;padding:7px 14px;cursor:pointer;}
+  .regio-tab.active{background:var(--dk);color:#fff;border-color:var(--dk);}
+  .regio-panel{display:none;}
+  .regio-panel.active{display:block;}
+
+  .ref-toggle{font-size:12.5px;font-weight:700;color:var(--md);background:none;border:none;
+    cursor:pointer;padding:0;margin-bottom:10px;text-decoration:underline;}
+  .ref-cards{display:none;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+  .ref-cards.open{display:grid;}
+  .ref-card{border:1px solid var(--lt);border-radius:8px;background:var(--pal);padding:9px 11px;font-size:12px;color:#555;}
+  .ref-card b{display:block;color:var(--dk);font-size:12.5px;margin-bottom:3px;}
+
+  .task-table{width:100%;border-collapse:collapse;margin-bottom:10px;}
+  .task-table th{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:#888;
+    text-align:left;padding:0 8px 6px;font-weight:800;}
+  .task-table td{padding:4px 6px;vertical-align:top;}
+  .task-table input[type=text],.task-table select{width:100%;font-size:13px;padding:7px 8px;
+    border:1.5px solid var(--lt);border-radius:6px;background:#fff;color:var(--tx);}
+  .task-row-del{background:none;border:none;color:#b55;font-size:16px;cursor:pointer;padding:4px 6px;}
+  .add-task-btn{font-size:13px;font-weight:700;color:var(--dk);background:var(--gl);
+    border:none;border-radius:18px;padding:8px 16px;cursor:pointer;}
+
+  .sess-shared textarea{width:100%;min-height:70px;font-size:14px;padding:10px 12px;
+    border:1.5px solid var(--lt);border-radius:8px;font-family:inherit;color:var(--tx);resize:vertical;}
+  .sess-actions{display:flex;gap:10px;margin-top:14px;}
+  .sess-btn{font-size:13.5px;font-weight:700;color:var(--dk);background:#fff;
+    border:1.5px solid var(--lt);border-radius:20px;padding:9px 16px;cursor:pointer;}
+  .sess-btn:hover{background:var(--pal);}
+  .sess-copy-ok{font-size:12.5px;color:#1a7a40;font-weight:700;align-self:center;}
+  #summary-table{width:100%;border-collapse:collapse;margin-bottom:6px;}
+  #summary-table th{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:#888;
+    text-align:left;padding:6px 8px;border-bottom:1.5px solid var(--lt);}
+  #summary-table td{font-size:13px;padding:7px 8px;border-bottom:1px solid var(--lt);color:#333;}
+  #summary-empty{font-size:13px;color:#999;font-style:italic;padding:8px 0;}
+
+  @media print{
+    .mode-tabs,.regio-tabs,.ref-toggle,.add-task-btn,.task-row-del,.sess-actions,.filter-bar{display:none !important;}
+    #mode-market{display:none !important;}
+    #mode-session{display:block !important;}
+    .regio-panel{display:block !important;margin-bottom:18px;page-break-inside:avoid;}
+    .sess-phase{border:none;padding:0;box-shadow:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="ideas-wrap">
+
+  <div class="mode-tabs">
+    <button class="mode-tab active" id="tab-market" onclick="setMode('market')">Ideeenmarkt</button>
+    <button class="mode-tab" id="tab-session" onclick="setMode('session')">Sessie-modus</button>
+  </div>
+
+  <div id="mode-market">
+
+  <div class="ideas-hdr">
+    <div class="ideas-title">Inspiratie- en ideeenmarkt &mdash; Week van de Palliatieve Zorg 2026</div>
+    <p class="ideas-sub">Werkdocument op basis van de brainstormsessie met transformatieaanjagers. De ideeen hieronder zijn gegroepeerd van concreet (heeft al een datum) naar nog uit te werken. Bedoeld als digitale markt: gebruik dit in de sessie met communicatieadviseurs en TA's om te bepalen wat een instelling zelf oppakt, wat regionaal opgepakt wordt, en wie voor wat nodig is.</p>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-grp">
+      <span class="filter-lbl">Regio</span>
+      <select id="f-regio" onchange="applyFilter()">
+        <option value="">Alle regio's</option>
+        <option value="Eemland">Eemland</option>
+        <option value="Utrecht stad">Utrecht stad</option>
+        <option value="ZO Utrecht">ZO Utrecht</option>
+        <option value="NW Utrecht">NW Utrecht</option>
+        <option value="Lekstroom">Lekstroom</option>
+      </select>
+    </div>
+    <div class="filter-grp">
+      <span class="filter-lbl">Organisatie</span>
+      <select id="f-org" onchange="applyFilter()">
+        <option value="">Alle organisaties</option>
+        <option value="Meander MC">Meander MC</option>
+        <option value="Careyn">Careyn</option>
+        <option value="AxionContinu">AxionContinu</option>
+        <option value="Silverein">Silverein</option>
+        <option value="Sante">Santé</option>
+        <option value="Netwerk Eemland">Netwerk Eemland</option>
+        <option value="UNICUM Huisartsenzorg">UNICUM Huisartsenzorg (RHO)</option>
+        <option value="Regionaal">Regionaal / meerdere organisaties</option>
+      </select>
+    </div>
+    <div class="filter-grp">
+      <span class="filter-lbl">Herkomst</span>
+      <select id="f-bron" onchange="applyFilter()">
+        <option value="">Allen</option>
+        <option value="Ziekenhuis">Ziekenhuis</option>
+        <option value="VVT">VVT</option>
+        <option value="Huisartsenzorg">Huisartsenzorg (RHO)</option>
+        <option value="Ambulance">Ambulance</option>
+      </select>
+    </div>
+    <div class="filter-grp">
+      <span class="filter-lbl">Doelgroep</span>
+      <select id="f-doelgroep" onchange="applyFilter()">
+        <option value="">Allen</option>
+        <option value="Zorgverleners">Zorgverleners</option>
+        <option value="Algemeen publiek">Algemeen publiek</option>
+      </select>
+    </div>
+    <button class="filter-reset" onclick="resetFilter()">Reset filters</button>
+    <span class="idea-count" id="idea-count"></span>
+  </div>
+
+  <!-- STAGE 1: CONCREET -->
+  <div class="stage-sec">
+    <div class="stage-hd">
+      <div class="stage-dot" style="background:#1a7a40"></div>
+      <span class="stage-lbl">Concreet &mdash; heeft al een datum</span>
+      <div class="stage-line"></div>
+    </div>
+    <div class="stage-desc">Deze activiteiten staan al (grotendeels) vast en kunnen gedeeld of aangehaakt worden.</div>
+    <div class="idea-grid">
+
+      <div class="idea" data-regio="Eemland" data-org="Netwerk Eemland" data-bron="VVT" data-doelgroep="Zorgverleners">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">VVT</span>
+          <span class="idea-tag tag-org">Netwerk Eemland</span>
+          <span class="idea-tag tag-regio">Eemland</span>
+          <span class="idea-tag tag-doelgroep">Zorgverleners</span>
+        </div>
+        <div class="idea-nm">Theatervoorstelling "Koning sterft"</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Op 5 oktober georganiseerd voor zorgmedewerkers door Netwerk Eemland, gecombineerd met een zorgmarkt. Kan mogelijk gedeeld worden met andere regio's of gekoppeld aan de Week.</div>
+        <div class="idea-meta">Datum: 5 oktober 2026</div>
+        <div class="idea-contact">
+          <span class="idea-contact-lbl">Contactpersoon</span>
+          <span class="idea-contact-nm">Mariska Oosterveld (aangedragen)</span>
+          <a href="mailto:mariska.oosterveld-vlug@silverein.nl">mariska.oosterveld-vlug@silverein.nl</a>
+        </div>
+      </div>
+
+      <div class="idea" data-regio="Eemland" data-org="Silverein" data-bron="VVT" data-doelgroep="Zorgverleners">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">VVT</span>
+          <span class="idea-tag tag-org">Silverein</span>
+          <span class="idea-tag tag-regio">Eemland</span>
+          <span class="idea-tag tag-doelgroep">Zorgverleners</span>
+        </div>
+        <div class="idea-nm">SQ-telling</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Op dinsdag 6 oktober SQ-telling (Surprise Question) vanuit het Meander-draaiboek; medewerkers gaan tellen.</div>
+        <div class="idea-meta">Datum: dinsdag 6 oktober 2026</div>
+        <div class="idea-contact">
+          <span class="idea-contact-lbl">Contactpersoon</span>
+          <span class="idea-contact-nm">Mariska Oosterveld</span>
+          <a href="mailto:mariska.oosterveld-vlug@silverein.nl">mariska.oosterveld-vlug@silverein.nl</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- STAGE 2: IN ONTWIKKELING -->
+  <div class="stage-sec">
+    <div class="stage-hd">
+      <div class="stage-dot" style="background:#c87328"></div>
+      <span class="stage-lbl">In ontwikkeling &mdash; TA is al gestart</span>
+      <div class="stage-line"></div>
+    </div>
+    <div class="stage-desc">De TA heeft dit al opgepakt of voorbereid, maar het moet nog verder uitgewerkt worden.</div>
+    <div class="idea-grid">
+
+      <div class="idea" data-regio="Eemland" data-org="Silverein" data-bron="VVT" data-doelgroep="Algemeen publiek">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">VVT</span>
+          <span class="idea-tag tag-org">Silverein</span>
+          <span class="idea-tag tag-regio">Eemland</span>
+          <span class="idea-tag tag-doelgroep">Algemeen publiek</span>
+        </div>
+        <div class="idea-nm">Online webinar voor clienten en naasten</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Online webinar voor clienten en naasten. Implementatietoolkit PAIS wordt hiervoor als ppt-startpunt gebruikt.</div>
+        <div class="idea-contact">
+          <span class="idea-contact-lbl">Contactpersoon</span>
+          <span class="idea-contact-nm">Mariska Oosterveld</span>
+          <a href="mailto:mariska.oosterveld-vlug@silverein.nl">mariska.oosterveld-vlug@silverein.nl</a>
+        </div>
+      </div>
+
+      <div class="idea" data-regio="Eemland" data-org="Meander MC" data-bron="Ziekenhuis" data-doelgroep="Zorgverleners">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">Ziekenhuis</span>
+          <span class="idea-tag tag-org">Meander MC</span>
+          <span class="idea-tag tag-regio">Eemland</span>
+          <span class="idea-tag tag-doelgroep">Zorgverleners</span>
+        </div>
+        <div class="idea-nm">Posters en digiboarden inzetten</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Posters en digiboarden goed inzetten in het ziekenhuis. Doelgroep nog uit te werken.</div>
+        <div class="idea-contact">
+          <span class="idea-contact-lbl">Contactpersoon</span>
+          <span class="idea-contact-nm">Tom van de Nieuwenhof</span>
+          <a href="mailto:T.vande.Nieuwenhof@meandermc.nl">T.vande.Nieuwenhof@meandermc.nl</a>
+        </div>
+      </div>
+
+      <div class="idea" data-regio="Eemland" data-org="Meander MC" data-bron="Ziekenhuis" data-doelgroep="Algemeen publiek">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">Ziekenhuis</span>
+          <span class="idea-tag tag-org">Meander MC</span>
+          <span class="idea-tag tag-regio">Eemland</span>
+          <span class="idea-tag tag-doelgroep">Algemeen publiek</span>
+        </div>
+        <div class="idea-nm">Korte interviews met patienten en collega's</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Korte interviewtjes maken met patienten en collega's in het ziekenhuis.</div>
+        <div class="idea-contact">
+          <span class="idea-contact-lbl">Contactpersoon</span>
+          <span class="idea-contact-nm">Tom van de Nieuwenhof</span>
+          <a href="mailto:T.vande.Nieuwenhof@meandermc.nl">T.vande.Nieuwenhof@meandermc.nl</a>
+        </div>
+      </div>
+
+      <div class="idea" data-regio="Eemland" data-org="Meander MC" data-bron="Ziekenhuis" data-doelgroep="Algemeen publiek">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">Ziekenhuis</span>
+          <span class="idea-tag tag-org">Meander MC</span>
+          <span class="idea-tag tag-regio">Eemland</span>
+          <span class="idea-tag tag-doelgroep">Algemeen publiek</span>
+        </div>
+        <div class="idea-nm">Zithoekje in het ziekenhuis</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Een zithoekje met huiselijke sfeer ingericht in het ziekenhuis, gericht op patienten.</div>
+        <div class="idea-contact">
+          <span class="idea-contact-lbl">Contactpersoon</span>
+          <span class="idea-contact-nm">Tom van de Nieuwenhof</span>
+          <a href="mailto:T.vande.Nieuwenhof@meandermc.nl">T.vande.Nieuwenhof@meandermc.nl</a>
+        </div>
+      </div>
+
+      <div class="idea" data-regio="Utrecht stad" data-org="Careyn" data-bron="VVT" data-doelgroep="Zorgverleners">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">VVT</span>
+          <span class="idea-tag tag-org">Careyn</span>
+          <span class="idea-tag tag-regio">Utrecht stad</span>
+          <span class="idea-tag tag-doelgroep">Zorgverleners</span>
+        </div>
+        <div class="idea-nm">Klinische les euthanasie (expertisecentrum)</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Clinische les na uitvoering euthanasie tijdens de Week. Do's en don'ts en de wettelijke mogelijkheden bespreken, realistisch beeld geven.</div>
+        <div class="idea-contact">
+          <span class="idea-contact-lbl">Contactpersoon</span>
+          <span class="idea-contact-nm">Susan Weijman</span>
+          <a href="mailto:s.weijman@careyn.nl">s.weijman@careyn.nl</a>
+        </div>
+      </div>
+
+      <div class="idea" data-regio="Utrecht stad" data-org="Careyn" data-bron="VVT" data-doelgroep="Zorgverleners">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">VVT</span>
+          <span class="idea-tag tag-org">Careyn</span>
+          <span class="idea-tag tag-regio">Utrecht stad</span>
+          <span class="idea-tag tag-doelgroep">Zorgverleners</span>
+        </div>
+        <div class="idea-nm">Lezing / intervisie euthanasie</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Lezing geven of intervisie organiseren, eventueel te combineren met een geestelijk verzorger. Niet alleen euthanasie uitlichten.</div>
+        <div class="idea-contact">
+          <span class="idea-contact-lbl">Contactpersoon</span>
+          <span class="idea-contact-nm">Susan Weijman</span>
+          <a href="mailto:s.weijman@careyn.nl">s.weijman@careyn.nl</a>
+        </div>
+      </div>
+
+      <div class="idea" data-regio="Lekstroom" data-org="Sante" data-bron="VVT" data-doelgroep="Zorgverleners">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">VVT</span>
+          <span class="idea-tag tag-org">Sante</span>
+          <span class="idea-tag tag-regio">Lekstroom</span>
+          <span class="idea-tag tag-doelgroep">Zorgverleners</span>
+        </div>
+        <div class="idea-nm">Interne bewustwording</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Schermen bij de lunchroom en screensavers inzetten, feiten en fabels plus een QR-code, posters en digitaal materiaal.</div>
+        <div class="idea-contact">
+          <span class="idea-contact-lbl">Contactpersoon</span>
+          <span class="idea-contact-nm">Tjerk van den Berg</span>
+          <a href="mailto:tvandenberg@santepartners.nl">tvandenberg@santepartners.nl</a>
+        </div>
+      </div>
+
+      <div class="idea" data-regio="Lekstroom" data-org="Sante" data-bron="VVT" data-doelgroep="Zorgverleners">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">VVT</span>
+          <span class="idea-tag tag-org">Sante</span>
+          <span class="idea-tag tag-regio">Lekstroom</span>
+          <span class="idea-tag tag-doelgroep">Zorgverleners</span>
+        </div>
+        <div class="idea-nm">Gezamenlijke scholingsdag Sante en Zorgspectrum</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Kenniscarrousel en ontwikkelingen delen tussen Sante en Zorgspectrum.</div>
+        <div class="idea-contact">
+          <span class="idea-contact-lbl">Contactpersoon</span>
+          <span class="idea-contact-nm">Tjerk van den Berg</span>
+          <a href="mailto:tvandenberg@santepartners.nl">tvandenberg@santepartners.nl</a>
+        </div>
+      </div>
+
+      <div class="idea" data-regio="Lekstroom" data-org="Sante" data-bron="VVT" data-doelgroep="Zorgverleners">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">VVT</span>
+          <span class="idea-tag tag-org">Sante</span>
+          <span class="idea-tag tag-regio">Lekstroom</span>
+          <span class="idea-tag tag-doelgroep">Zorgverleners</span>
+        </div>
+        <div class="idea-nm">Kiezen en delen inzetten</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Gebruik maken van het bestaande "kiezen en delen" kaartspel/materiaal binnen de organisatie.</div>
+        <div class="idea-contact">
+          <span class="idea-contact-lbl">Contactpersoon</span>
+          <span class="idea-contact-nm">Tjerk van den Berg</span>
+          <a href="mailto:tvandenberg@santepartners.nl">tvandenberg@santepartners.nl</a>
+        </div>
+      </div>
+
+      <div class="idea" data-regio="Lekstroom" data-org="Sante" data-bron="VVT" data-doelgroep="Algemeen publiek">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">VVT</span>
+          <span class="idea-tag tag-org">Sante</span>
+          <span class="idea-tag tag-regio">Lekstroom</span>
+          <span class="idea-tag tag-doelgroep">Algemeen publiek</span>
+        </div>
+        <div class="idea-nm">Extern: ledenmagazine en interview via QR</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Ledenmagazine gebruiken voor externe communicatie, met een interview te bereiken via een QR-code.</div>
+        <div class="idea-contact">
+          <span class="idea-contact-lbl">Contactpersoon</span>
+          <span class="idea-contact-nm">Tjerk van den Berg</span>
+          <a href="mailto:tvandenberg@santepartners.nl">tvandenberg@santepartners.nl</a>
+        </div>
+      </div>
+
+      <div class="idea" data-regio="ZO Utrecht" data-org="AxionContinu" data-bron="VVT" data-doelgroep="Zorgverleners">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">VVT</span>
+          <span class="idea-tag tag-org">AxionContinu</span>
+          <span class="idea-tag tag-regio">ZO Utrecht</span>
+          <span class="idea-tag tag-doelgroep">Zorgverleners</span>
+        </div>
+        <div class="idea-nm">Theatervoorstelling + inspiratiesessie</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Subsidie binnen voor een activiteit/inspiratiesessie met theatervoorstelling, gericht op wat goede palliatieve zorg is en waarom dit relevant is in het werk. Aansluiten op posters voor wijkverpleegkundigen. Moet nog verder uitgewerkt worden.</div>
+        <div class="idea-meta">Status: subsidie toegekend, uitwerking loopt</div>
+        <div class="idea-contact">
+          <span class="idea-contact-lbl">Contactpersoon</span>
+          <span class="idea-contact-nm">Sara Franssen</span>
+          <a href="mailto:sfranssen@axioncontinu.nl">sfranssen@axioncontinu.nl</a>
+        </div>
+      </div>
+
+      <div class="idea" data-regio="ZO Utrecht" data-org="AxionContinu" data-bron="VVT" data-doelgroep="Zorgverleners">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">VVT</span>
+          <span class="idea-tag tag-org">AxionContinu</span>
+          <span class="idea-tag tag-regio">ZO Utrecht</span>
+          <span class="idea-tag tag-doelgroep">Zorgverleners</span>
+        </div>
+        <div class="idea-nm">Scholingen aanbieden (leren en ontwikkeling)</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Scholingen aanbieden tijdens de Week van de Palliatieve Zorg. Doel: kijken hoeveel zorgverleners komen en experimenteren met de vorm, om dit volgend jaar breder en groter uit te werken.</div>
+        <div class="idea-contact">
+          <span class="idea-contact-lbl">Contactpersoon</span>
+          <span class="idea-contact-nm">Sara Franssen</span>
+          <a href="mailto:sfranssen@axioncontinu.nl">sfranssen@axioncontinu.nl</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- STAGE 3: IDEEEN -->
+  <div class="stage-sec">
+    <div class="stage-hd">
+      <div class="stage-dot" style="background:#999"></div>
+      <span class="stage-lbl">Ideeen &mdash; nog uit te werken</span>
+      <div class="stage-line"></div>
+    </div>
+    <div class="stage-desc">Denkrichtingen die nog besproken of gecheckt moeten worden voordat ze concreet worden.</div>
+    <div class="idea-grid">
+
+      <div class="idea" data-regio="Utrecht stad" data-org="Careyn" data-bron="VVT" data-doelgroep="Zorgverleners">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">VVT</span>
+          <span class="idea-tag tag-org">Careyn</span>
+          <span class="idea-tag tag-regio">Utrecht stad</span>
+          <span class="idea-tag tag-doelgroep">Zorgverleners</span>
+        </div>
+        <div class="idea-nm">Nascholing euthanasie</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Nascholing rondom euthanasie nog uit te werken, als aanvulling op de klinische les en lezing/intervisie.</div>
+        <div class="idea-contact">
+          <span class="idea-contact-lbl">Contactpersoon</span>
+          <span class="idea-contact-nm">Susan Weijman</span>
+          <a href="mailto:s.weijman@careyn.nl">s.weijman@careyn.nl</a>
+        </div>
+      </div>
+
+      <div class="idea" data-regio="" data-org="Regionaal" data-bron="VVT" data-doelgroep="Algemeen publiek">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">VVT</span>
+          <span class="idea-tag tag-org">Regionaal</span>
+          <span class="idea-tag tag-doelgroep">Algemeen publiek</span>
+        </div>
+        <div class="idea-nm">Theatervoorstelling 11 juli koppelen aan de Week</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Er is al een theatervoorstelling gepland op 11 juli voor patienten en naasten. Vraag: kan dit (of een vergelijkbare voorstelling) ook georganiseerd worden binnen de Week van de Palliatieve Zorg?</div>
+        <div class="idea-meta">Actie: checken bij Mirjam</div>
+      </div>
+
+      <div class="idea" data-regio="" data-org="Regionaal" data-bron="Ziekenhuis" data-doelgroep="Algemeen publiek">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">Ziekenhuis</span>
+          <span class="idea-tag tag-org">Regionaal</span>
+          <span class="idea-tag tag-doelgroep">Algemeen publiek</span>
+        </div>
+        <div class="idea-nm">Interviews/publicaties koppelen aan Weet-u-wat-u-wilt</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Interviews en publicaties (bijvoorbeeld vanuit het ziekenhuis) koppelen aan de bestaande Weet-u-wat-u-wilt-bijeenkomsten, zodat materiaal en bijeenkomsten elkaar versterken.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- STAGE 4: KENNISQUIZ COMPETITIE -->
+  <div class="stage-sec">
+    <div class="stage-hd">
+      <div class="stage-dot" style="background:#2a6fa5"></div>
+      <span class="stage-lbl">Regionale initiatieven</span>
+      <div class="stage-line"></div>
+    </div>
+    <div class="stage-desc">Overkoepelende ideeen, los van individuele instellingen, te coordineren op regionaal niveau.</div>
+    <div class="idea-grid">
+
+      <div class="idea" data-regio="" data-org="Regionaal" data-bron="VVT Ziekenhuis" data-doelgroep="Zorgverleners">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">Ziekenhuis + VVT</span>
+          <span class="idea-tag tag-org">Regionaal</span>
+          <span class="idea-tag tag-doelgroep">Zorgverleners</span>
+        </div>
+        <div class="idea-nm">Algemene kennisquiz met competitie-element</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Een regionale kennisquiz over palliatieve zorg voor zorgmedewerkers, met een competitie-element: welke instelling heeft de meeste ingevulde quizzen (gegroepeerd per transformatieaanjager)? Stimuleert deelname en onderlinge uitwisseling tussen organisaties.</div>
+        <div class="idea-contact">
+          <span class="idea-contact-lbl">Contactpersoon</span>
+          <span class="idea-contact-nm">Lonneke van Leeuwen</span>
+          <a href="mailto:lonneke.van.leeuwen@tpz-midden.nl">lonneke.van.leeuwen@tpz-midden.nl</a>
+        </div>
+      </div>
+
+      <div class="idea" data-regio="" data-org="Regionaal" data-bron="VVT Ziekenhuis" data-doelgroep="Algemeen publiek">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">Ziekenhuis + VVT</span>
+          <span class="idea-tag tag-org">Regionaal</span>
+          <span class="idea-tag tag-doelgroep">Algemeen publiek</span>
+        </div>
+        <div class="idea-nm">Organiseren van een Weet u wat u wilt-bijeenkomst</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Publieksbijeenkomst in de wijk of instelling, gebaseerd op het bestaande concept Weet u wat u wilt. Er is al een toolkit hiervoor beschikbaar om lokaal te organiseren.</div>
+        <a class="idea-lk" href="#" onclick="return false;">&#8594; Link naar toolkit (volgt)</a>
+        <div class="idea-contact">
+          <span class="idea-contact-lbl">Contactpersoon</span>
+          <span class="idea-contact-nm">Anneloes Bork</span>
+          <a href="mailto:anneloes.bork@tpz-midden.nl">anneloes.bork@tpz-midden.nl</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- STAGE 5: RHO HUISARTSENZORG -->
+  <div class="stage-sec">
+    <div class="stage-hd">
+      <div class="stage-dot" style="background:#7a4fa5"></div>
+      <span class="stage-lbl">RHO / Huisartsenzorg &mdash; campagne "Markeren"</span>
+      <div class="stage-line"></div>
+    </div>
+    <div class="stage-desc">Uit het communicatieplan van UNICUM Huisartsenzorg (namens de RHO's). Thema: Markeren van de palliatieve fase. Gericht op huisartsen, POH-Ouderen en andere zorgprofessionals &mdash; geen communicatie richting inwoners/patienten. Opgebouwd in 3 fasen: week 39-40 (zichtbaarheid), week 41 (activatie tijdens de Week zelf), week 42-43 (borging).</div>
+    <div class="idea-grid">
+
+      <div class="idea" data-regio="" data-org="UNICUM Huisartsenzorg" data-bron="Huisartsenzorg" data-doelgroep="Zorgverleners">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">Huisartsenzorg</span>
+          <span class="idea-tag tag-org">UNICUM Huisartsenzorg</span>
+          <span class="idea-tag tag-doelgroep">Zorgverleners</span>
+        </div>
+        <div class="idea-nm">Flyer + Markeerstift als postpakketje</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Flyer met stappenplan en ICPC-code A690, QR-code naar het webinar in oktober, infographic op de achterzijde. Markeerstift laten bedrukken en samen met flyer en brief als postpakketje naar alle praktijken sturen. Ook verspreiden via scholing en consulenten.</div>
+        <div class="idea-meta">Fase 1 &middot; week 39-40 &middot; Bron: Comm plan Week van de PZ oktober v2.docx</div>
+      </div>
+
+      <div class="idea" data-regio="" data-org="UNICUM Huisartsenzorg" data-bron="Huisartsenzorg" data-doelgroep="Zorgverleners">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">Huisartsenzorg</span>
+          <span class="idea-tag tag-org">UNICUM Huisartsenzorg</span>
+          <span class="idea-tag tag-doelgroep">Zorgverleners</span>
+        </div>
+        <div class="idea-nm">Infographic Markeren Midden-Nederland</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Infographic over Markeren ontwikkelen voor Midden-Nederland op basis van een bestaande versie. Wordt gebruikt op de achterzijde van de flyer en als beeld bij de LinkedIn-post.</div>
+        <div class="idea-meta">Fase 1 &middot; week 39-40 &middot; Bron: Comm plan Week van de PZ oktober v2.docx</div>
+      </div>
+
+      <div class="idea" data-regio="" data-org="UNICUM Huisartsenzorg" data-bron="Huisartsenzorg" data-doelgroep="Zorgverleners">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">Huisartsenzorg</span>
+          <span class="idea-tag tag-org">UNICUM Huisartsenzorg</span>
+          <span class="idea-tag tag-doelgroep">Zorgverleners</span>
+        </div>
+        <div class="idea-nm">Artikelen, nieuwsbericht en LinkedIn-post bewustwording</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Algemeen artikel in nieuwsbrief Upd&#64;te (17 sept) met aankondiging van de Week en de nadruk op Markeren. Actief nieuwsbericht over de Week via Corpio richting alle LSV's. Kort artikel op Corpio over het postpakketje. LinkedIn-post met artikel over Markeren en de infographic als beeld.</div>
+        <div class="idea-meta">Fase 1 &middot; week 39-40 &middot; Bron: Comm plan Week van de PZ oktober v2.docx</div>
+      </div>
+
+      <div class="idea" data-regio="" data-org="UNICUM Huisartsenzorg" data-bron="Huisartsenzorg" data-doelgroep="Zorgverleners">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">Huisartsenzorg</span>
+          <span class="idea-tag tag-org">UNICUM Huisartsenzorg</span>
+          <span class="idea-tag tag-doelgroep">Zorgverleners</span>
+        </div>
+        <div class="idea-nm">Webinar "Op tijd zien, beter zorgen"</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Webinar over markeren en proactieve zorgplanning in de praktijk, voor huisartsen, POH-Ouderen en VS/PA. Daarnaast bestaand materiaal over Markeren delen op LinkedIn en landelijke activiteiten promoten tijdens de Week zelf.</div>
+        <div class="idea-meta">Fase 2 &middot; week 41 (Week van de PZ) &middot; Bron: Comm plan Week van de PZ oktober v2.docx</div>
+      </div>
+
+      <div class="idea" data-regio="" data-org="UNICUM Huisartsenzorg" data-bron="Huisartsenzorg" data-doelgroep="Zorgverleners">
+        <div class="idea-tags">
+          <span class="idea-tag tag-bron">Huisartsenzorg</span>
+          <span class="idea-tag tag-org">UNICUM Huisartsenzorg</span>
+          <span class="idea-tag tag-doelgroep">Zorgverleners</span>
+        </div>
+        <div class="idea-nm">Follow-up artikel en interview met huisarts</div>
+        <div class="idea-rl"></div>
+        <div class="idea-ds">Vervolgartikel in de nieuwsbrief met terugkoppeling en een interview met een huisarts die ervaring heeft met Markeren. Website aanvullen met opgehaalde informatie over palliatieve zorg. Scholing in november aankondigen als vervolg.</div>
+        <div class="idea-meta">Fase 3 &middot; week 42-43 (borging) &middot; Bron: Comm plan Week van de PZ oktober v2.docx</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- STRATEGISCH BLOK -->
+  <div class="stage-sec">
+    <div class="stage-hd">
+      <div class="stage-dot" style="background:var(--dk)"></div>
+      <span class="stage-lbl">Strategische vragen voor de sessie</span>
+      <div class="stage-line"></div>
+    </div>
+    <div class="strat-box">
+      <h3>Bespreekpunten &mdash; regionaal vs. individueel</h3>
+      <p class="strat-intro">Deze punten kwamen naar voren in de "Algemeen/volgende sessie"-notities. Het zijn geen losse activiteiten maar procesvragen: hoe organiseren we dit samen, en wat laten we bij de individuele instelling?</p>
+      <ul>
+        <li><strong>Markt-idee:</strong> een gezamenlijke markt van VVT-organisaties en ziekenhuizen samen, breed toegankelijk, eventueel gekoppeld aan een activiteit bij het ziekenhuis. Nog uitzoeken hoe dit zou kunnen werken &mdash; mogelijk op een ander moment dan de Week zelf.</li>
+        <li><strong>Inventariseren en filteren:</strong> eerst ophalen wat er al is (alles verzamelen), dan kijken waar de behoefte ligt, en vervolgens in groepen uitwerken op basis van die behoefte. Doel is een gezamenlijk, volledig overzicht.</li>
+        <li><strong>Subregio als rode draad:</strong> per subregio een duidelijke lijn aanbrengen in wat georganiseerd wordt, in plaats van losse initiatieven naast elkaar.</li>
+        <li><strong>Aandacht voor kleinere VVT-organisaties:</strong> zorgen dat kleinere organisaties niet ondersneeuwen bij wat de grote organisaties oppakken, en meeliften op wat breder voor andere medewerkers relevant is.</li>
+        <li><strong>Weten wat iedereen van plan is:</strong> ook zonder volledige afstemming is het al waardevol om zichtbaar te maken wie wat van plan is &mdash; input voor de tijdlijn.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="ideas-ftr">Werkdocument |&nbsp; Samengesteld door Anneloes Bork &nbsp;|&nbsp; Transformatie Palliatieve Zorg Midden-Nederland</div>
+
+  </div><!-- /mode-market -->
+
+  <div id="mode-session">
+
+    <div class="sess-phase">
+      <div class="sess-phase-hd">
+        <span class="sess-badge">10 min &middot; Plenair</span>
+        <span class="sess-phase-title">Opening &amp; kader</span>
+      </div>
+      <div class="sess-intro">
+        <p>Vandaag kijken we niet naar de inhoud van de activiteiten zelf, maar naar de <strong>interne communicatie</strong> eromheen: via welk kanaal zetten we iets in, wat is de kernboodschap, wie pakt het op en wanneer speelt het. De ideeenmarkt (andere tab) dient als achtergrond/inspiratie &mdash; niet als het hoofdonderwerp van vandaag.</p>
+      </div>
+      <div class="sess-agenda">
+        <div class="sess-agenda-item">10 min <span>Plenair &mdash; opening &amp; kader</span></div>
+        <div class="sess-agenda-item">40 min <span>Breakout per sector (RHO / VVT / Ziekenhuis / Ambulance) &mdash; plannen &amp; taken verdelen</span></div>
+        <div class="sess-agenda-item">10 min <span>Plenair &mdash; terugkoppeling &amp; afsluiting</span></div>
+      </div>
+    </div>
+
+    <div class="sess-phase">
+      <div class="sess-phase-hd">
+        <span class="sess-badge">40 min &middot; Breakout</span>
+        <span class="sess-phase-title">Per sector: kanaal, boodschap, eigenaar, planning</span>
+      </div>
+      <div class="regio-tabs" id="regio-tabs"></div>
+      <div id="regio-panels"></div>
+    </div>
+
+    <div class="sess-phase">
+      <div class="sess-phase-hd">
+        <span class="sess-badge">10 min &middot; Plenair</span>
+        <span class="sess-phase-title">Terugkoppeling &amp; afsluiting</span>
+      </div>
+      <table id="summary-table">
+        <thead><tr><th>Sector</th><th>Kanaal</th><th>Boodschap</th><th>Doelgroep</th><th>Wie</th><th>Wanneer</th><th>Status</th></tr></thead>
+        <tbody id="summary-body"></tbody>
+      </table>
+      <div id="summary-empty">Nog geen taken ingevuld in de breakout.</div>
+      <div class="sess-shared">
+        <div class="filter-lbl" style="margin-bottom:6px;">Wat hebben we regionaal nodig / vervolgstappen</div>
+        <textarea id="vervolgstappen" placeholder="Bijv. gedeelde middelen, afstemming, wat blijft liggen..." oninput="saveSession()"></textarea>
+      </div>
+      <div class="sess-actions">
+        <button class="sess-btn" onclick="window.print()">Printen / exporteren als PDF</button>
+        <button class="sess-btn" onclick="copySessionText()">Kopieer als tekst</button>
+        <span class="sess-copy-ok" id="copy-ok" style="display:none;">Gekopieerd</span>
+      </div>
+    </div>
+
+  </div><!-- /mode-session -->
+
+</div>
+
+<script>
+function applyFilter(){
+  var regio = document.getElementById('f-regio').value;
+  var org = document.getElementById('f-org').value;
+  var bron = document.getElementById('f-bron').value;
+  var doelgroep = document.getElementById('f-doelgroep').value;
+  var items = document.querySelectorAll('.idea');
+  var visible = 0;
+  items.forEach(function(el){
+    var okRegio = !regio || el.dataset.regio === regio;
+    var okOrg = !org || el.dataset.org === org;
+    var bronVals = (el.dataset.bron || '').split(' ');
+    var okBron = !bron || bronVals.indexOf(bron) !== -1;
+    var doelgroepVals = (el.dataset.doelgroep || '').split(' ');
+    var okDoelgroep = !doelgroep || (doelgroep === 'Zorgverleners' ? doelgroepVals.indexOf('Zorgverleners') !== -1 : doelgroepVals.join(' ').indexOf('Algemeen') !== -1);
+    var show = okRegio && okOrg && okBron && okDoelgroep;
+    el.classList.toggle('hidden', !show);
+    if(show) visible++;
+  });
+  document.querySelectorAll('.stage-sec').forEach(function(sec){
+    var grid = sec.querySelector('.idea-grid');
+    if(!grid) return;
+    var anyVisible = Array.from(grid.querySelectorAll('.idea')).some(function(el){return !el.classList.contains('hidden');});
+    sec.style.display = anyVisible ? '' : 'none';
+  });
+  document.getElementById('idea-count').textContent = visible + ' van ' + items.length + ' ideeen zichtbaar';
+}
+function resetFilter(){
+  document.getElementById('f-regio').value = '';
+  document.getElementById('f-org').value = '';
+  document.getElementById('f-bron').value = '';
+  document.getElementById('f-doelgroep').value = '';
+  applyFilter();
+}
+applyFilter();
+
+/* ---- MODE SWITCH ---- */
+function setMode(mode){
+  document.getElementById('mode-market').style.display = mode === 'market' ? 'block' : 'none';
+  document.getElementById('mode-session').style.display = mode === 'session' ? 'block' : 'none';
+  document.getElementById('tab-market').classList.toggle('active', mode === 'market');
+  document.getElementById('tab-session').classList.toggle('active', mode === 'session');
+}
+
+/* ---- SESSION MODE ---- */
+var SECTOREN = ['RHO', 'VVT', 'Ziekenhuis', 'Ambulance'];
+var SECTOR_BRON = { 'RHO':'Huisartsenzorg', 'VVT':'VVT', 'Ziekenhuis':'Ziekenhuis', 'Ambulance':'Ambulance' };
+var KANALEN = ['Intranet','Nieuwsbrief','Teams/screensaver','Poster/digibord','Social media','Anders'];
+var DOELGROEPEN = ['Zorgverleners','Algemeen publiek','Collega\'s intern'];
+var STATUSSEN = ['Idee','In uitvoering','Klaar'];
+var SESSION_KEY = 'sessieData_v2';
+
+function emptyTask(){
+  return { kanaal: KANALEN[0], boodschap:'', doelgroep: DOELGROEPEN[0], eigenaar:'', wanneer:'', status: STATUSSEN[0] };
+}
+
+function loadSession(){
+  try{
+    var raw = localStorage.getItem(SESSION_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  var data = { sectoren:{}, vervolgstappen:'' };
+  SECTOREN.forEach(function(s){ data.sectoren[s] = [ emptyTask() ]; });
+  return data;
+}
+var sessionData = loadSession();
+SECTOREN.forEach(function(s){
+  if(!sessionData.sectoren[s] || !sessionData.sectoren[s].length) sessionData.sectoren[s] = [ emptyTask() ];
+});
+
+function saveSession(){
+  sessionData.vervolgstappen = document.getElementById('vervolgstappen').value;
+  localStorage.setItem(SESSION_KEY, JSON.stringify(sessionData));
+  renderSummary();
+}
+
+function selectOptions(list, selected){
+  return list.map(function(o){
+    return '<option value="'+o+'"'+(o===selected?' selected':'')+'>'+o+'</option>';
+  }).join('');
+}
+
+function buildSectorTabsAndPanels(){
+  var tabsEl = document.getElementById('regio-tabs');
+  var panelsEl = document.getElementById('regio-panels');
+  tabsEl.innerHTML = '';
+  panelsEl.innerHTML = '';
+
+  SECTOREN.forEach(function(sector, idx){
+    var tab = document.createElement('button');
+    tab.className = 'regio-tab' + (idx === 0 ? ' active' : '');
+    tab.textContent = sector;
+    tab.onclick = function(){ showSectorPanel(sector); };
+    tabsEl.appendChild(tab);
+
+    var panel = document.createElement('div');
+    panel.className = 'regio-panel' + (idx === 0 ? ' active' : '');
+    panel.id = 'panel-' + sector;
+
+    var bronToken = SECTOR_BRON[sector];
+    var refIdeas = Array.from(document.querySelectorAll('#mode-market .idea')).filter(function(el){
+      var bronVals = (el.dataset.bron || '').split(' ');
+      return bronVals.indexOf(bronToken) !== -1;
+    });
+    var refHtml = '';
+    if(refIdeas.length){
+      refHtml += '<button class="ref-toggle" onclick="this.nextElementSibling.classList.toggle(\'open\')">Toon ideeen uit de ideeenmarkt voor ' + sector + ' (' + refIdeas.length + ')</button>';
+      refHtml += '<div class="ref-cards">';
+      refIdeas.forEach(function(el){
+        var nm = el.querySelector('.idea-nm') ? el.querySelector('.idea-nm').textContent : '';
+        var ds = el.querySelector('.idea-ds') ? el.querySelector('.idea-ds').textContent : '';
+        var orgTag = el.querySelector('.tag-org') ? el.querySelector('.tag-org').textContent : '';
+        refHtml += '<div class="ref-card"><b>' + nm + '</b><span style="color:#999;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;">' + orgTag + '</span><br>' + ds + '</div>';
+      });
+      refHtml += '</div>';
+    } else {
+      refHtml += '<p style="font-size:12.5px;color:#999;font-style:italic;margin-bottom:12px;">Nog geen ideeen in de ideeenmarkt voor deze sector.</p>';
+    }
+
+    panel.innerHTML = refHtml +
+      '<table class="task-table"><thead><tr>' +
+      '<th style="width:16%">Kanaal</th><th style="width:28%">Boodschap</th><th style="width:16%">Doelgroep</th>' +
+      '<th style="width:16%">Wie</th><th style="width:14%">Wanneer</th><th style="width:14%">Status</th><th></th>' +
+      '</tr></thead><tbody id="tbody-' + sector + '"></tbody></table>' +
+      '<button class="add-task-btn" onclick="addTask(\'' + sector + '\')">+ Taak toevoegen</button>';
+
+    panelsEl.appendChild(panel);
+    renderTasks(sector);
+  });
+}
+
+function showSectorPanel(sector){
+  document.querySelectorAll('.regio-tab').forEach(function(t){
+    t.classList.toggle('active', t.textContent === sector);
+  });
+  document.querySelectorAll('.regio-panel').forEach(function(p){
+    p.classList.toggle('active', p.id === 'panel-' + sector);
+  });
+}
+
+function addTask(sector){
+  sessionData.sectoren[sector].push(emptyTask());
+  saveSession();
+  renderTasks(sector);
+}
+
+function removeTask(sector, i){
+  sessionData.sectoren[sector].splice(i, 1);
+  if(!sessionData.sectoren[sector].length) sessionData.sectoren[sector].push(emptyTask());
+  saveSession();
+  renderTasks(sector);
+}
+
+function updateTask(sector, i, field, value){
+  sessionData.sectoren[sector][i][field] = value;
+  saveSession();
+}
+
+function renderTasks(sector){
+  var tbody = document.getElementById('tbody-' + sector);
+  if(!tbody) return;
+  var rows = sessionData.sectoren[sector];
+  tbody.innerHTML = rows.map(function(row, i){
+    return '<tr>' +
+      '<td><select onchange="updateTask(\''+sector+'\','+i+',\'kanaal\',this.value)">' + selectOptions(KANALEN, row.kanaal) + '</select></td>' +
+      '<td><input type="text" value="'+escapeHtml(row.boodschap)+'" oninput="updateTask(\''+sector+'\','+i+',\'boodschap\',this.value)"></td>' +
+      '<td><select onchange="updateTask(\''+sector+'\','+i+',\'doelgroep\',this.value)">' + selectOptions(DOELGROEPEN, row.doelgroep) + '</select></td>' +
+      '<td><input type="text" value="'+escapeHtml(row.eigenaar)+'" oninput="updateTask(\''+sector+'\','+i+',\'eigenaar\',this.value)"></td>' +
+      '<td><input type="text" value="'+escapeHtml(row.wanneer)+'" oninput="updateTask(\''+sector+'\','+i+',\'wanneer\',this.value)"></td>' +
+      '<td><select onchange="updateTask(\''+sector+'\','+i+',\'status\',this.value)">' + selectOptions(STATUSSEN, row.status) + '</select></td>' +
+      '<td><button class="task-row-del" onclick="removeTask(\''+sector+'\','+i+')" title="Verwijderen">&times;</button></td>' +
+      '</tr>';
+  }).join('');
+}
+
+function escapeHtml(s){
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderSummary(){
+  var body = document.getElementById('summary-body');
+  var empty = document.getElementById('summary-empty');
+  var allRows = [];
+  SECTOREN.forEach(function(sector){
+    sessionData.sectoren[sector].forEach(function(row){
+      if(row.boodschap || row.eigenaar) allRows.push(Object.assign({sector: sector}, row));
+    });
+  });
+  if(!allRows.length){
+    body.innerHTML = '';
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+  body.innerHTML = allRows.map(function(r){
+    return '<tr><td>'+r.sector+'</td><td>'+escapeHtml(r.kanaal)+'</td><td>'+escapeHtml(r.boodschap)+'</td><td>'+escapeHtml(r.doelgroep)+'</td><td>'+escapeHtml(r.eigenaar)+'</td><td>'+escapeHtml(r.wanneer)+'</td><td>'+escapeHtml(r.status)+'</td></tr>';
+  }).join('');
+}
+
+function copySessionText(){
+  var lines = ['Week van de Palliatieve Zorg 2026 — sessie communicatieplan', ''];
+  SECTOREN.forEach(function(sector){
+    var rows = sessionData.sectoren[sector].filter(function(r){ return r.boodschap || r.eigenaar; });
+    if(!rows.length) return;
+    lines.push(sector + ':');
+    rows.forEach(function(r){
+      lines.push('  - [' + r.kanaal + '] ' + r.boodschap + ' | doelgroep: ' + r.doelgroep + ' | wie: ' + r.eigenaar + ' | wanneer: ' + r.wanneer + ' | status: ' + r.status);
+    });
+    lines.push('');
+  });
+  if(sessionData.vervolgstappen){
+    lines.push('Vervolgstappen / regionaal nodig:');
+    lines.push(sessionData.vervolgstappen);
+  }
+  var text = lines.join('\n');
+  navigator.clipboard.writeText(text).then(function(){
+    var ok = document.getElementById('copy-ok');
+    ok.style.display = '';
+    setTimeout(function(){ ok.style.display = 'none'; }, 2000);
+  });
+}
+
+document.getElementById('vervolgstappen').value = sessionData.vervolgstappen || '';
+buildSectorTabsAndPanels();
+renderSummary();
+</script>
+
+</body>
+</html>
