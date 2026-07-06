@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="style.css">
 <style>
   html,body{height:auto;min-height:100%;overflow:visible;}
-  body{background:var(--pal);margin:0;font-family:inherit;display:block;overflow-y:auto;}
+  body{background:var(--pal);margin:0;font-family:Aptos,'Segoe UI',Arial,sans-serif;display:block;overflow-y:auto;}
   .ideas-wrap{max-width:1180px;margin:0 auto;padding:28px 24px 60px;}
   .ideas-hdr{margin-bottom:18px;}
   .ideas-title{font-size:30px;font-weight:800;color:var(--dk);margin:0 0 8px;}
@@ -73,7 +73,7 @@
   .mode-tab.active{background:var(--dk);color:#fff;border-color:var(--dk);}
 
   /* SESSION MODE */
-  #mode-session{display:none;}
+  #mode-market{display:none;}
   .sess-phase{background:#fff;border:1.5px solid var(--lt);border-radius:10px;
     padding:20px 22px;margin-bottom:22px;}
   .sess-phase-hd{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
@@ -137,8 +137,8 @@
 <div class="ideas-wrap">
 
   <div class="mode-tabs">
-    <button class="mode-tab active" id="tab-market" onclick="setMode('market')">Ideeenmarkt</button>
-    <button class="mode-tab" id="tab-session" onclick="setMode('session')">Sessie-modus</button>
+    <button class="mode-tab" id="tab-market" onclick="setMode('market')">Ideeenmarkt</button>
+    <button class="mode-tab active" id="tab-session" onclick="setMode('session')">Sessie-modus</button>
   </div>
 
   <div id="mode-market">
