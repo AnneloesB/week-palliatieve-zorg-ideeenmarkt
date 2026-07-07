@@ -112,6 +112,8 @@
 
   .sess-shared textarea{width:100%;min-height:70px;font-size:14px;padding:10px 12px;
     border:1.5px solid var(--lt);border-radius:8px;font-family:inherit;color:var(--tx);resize:vertical;}
+  .sess-warning{font-size:12.5px;color:#8a5a00;background:#fff6e0;border:1px solid #f0d98c;
+    border-radius:6px;padding:7px 10px;margin-bottom:10px;}
   .sess-actions{display:flex;gap:10px;margin-top:14px;}
   .sess-btn{font-size:13.5px;font-weight:700;color:var(--dk);background:#fff;
     border:1.5px solid var(--lt);border-radius:20px;padding:9px 16px;cursor:pointer;}
@@ -124,7 +126,7 @@
   #summary-empty{font-size:13px;color:#999;font-style:italic;padding:8px 0;}
 
   @media print{
-    .mode-tabs,.regio-tabs,.ref-toggle,.add-task-btn,.task-row-del,.sess-actions,.filter-bar{display:none !important;}
+    .mode-tabs,.regio-tabs,.ref-toggle,.add-task-btn,.task-row-del,.sess-actions,.filter-bar,.no-print,.sess-warning{display:none !important;}
     #mode-market{display:none !important;}
     #mode-session{display:block !important;}
     .regio-panel{display:block !important;margin-bottom:18px;page-break-inside:avoid;}
@@ -661,13 +663,13 @@
 
   <div id="mode-session">
 
-    <div class="sess-phase">
+    <div class="sess-phase no-print">
       <div class="sess-phase-hd">
         <span class="sess-badge">10 min &middot; Plenair</span>
         <span class="sess-phase-title">Opening &amp; kader</span>
       </div>
       <div class="sess-intro">
-        <p>Vandaag kijken we niet naar de inhoud van de activiteiten zelf, maar naar de <strong>interne communicatie</strong> eromheen: via welk kanaal zetten we iets in, wat is de kernboodschap, wie pakt het op en wanneer speelt het. De ideeenmarkt (andere tab) dient als achtergrond/inspiratie &mdash; niet als het hoofdonderwerp van vandaag.</p>
+        <p>Vandaag richten we ons op de <strong>interne communicatie</strong> rondom de activiteiten: via welk kanaal zetten we iets in, wat is de kernboodschap, wie pakt het op en wanneer speelt het. De ideeenmarkt (andere tab) dient als achtergrond/inspiratie &mdash; niet als het hoofdonderwerp van vandaag.</p>
       </div>
       <div class="sess-agenda">
         <div class="sess-agenda-item">10 min <span>Plenair &mdash; opening &amp; kader</span></div>
@@ -681,6 +683,7 @@
         <span class="sess-badge">40 min &middot; Breakout</span>
         <span class="sess-phase-title">Per sector: kanaal, boodschap, eigenaar, planning</span>
       </div>
+      <div class="sess-warning">Let op: als je je browser sluit, verlies je je ingevoerde gegevens.</div>
       <div class="regio-tabs" id="regio-tabs"></div>
       <div id="regio-panels"></div>
     </div>
@@ -697,11 +700,12 @@
       <div id="summary-empty">Nog geen taken ingevuld in de breakout.</div>
       <div class="sess-shared">
         <div class="filter-lbl" style="margin-bottom:6px;">Wat hebben we regionaal nodig / vervolgstappen</div>
+        <div class="sess-warning">Let op: als je je browser sluit, verlies je je ingevoerde gegevens.</div>
         <textarea id="vervolgstappen" placeholder="Bijv. gedeelde middelen, afstemming, wat blijft liggen..." oninput="saveSession()"></textarea>
       </div>
       <div class="sess-actions">
         <button class="sess-btn" onclick="window.print()">Printen / exporteren als PDF</button>
-        <button class="sess-btn" onclick="copySessionText()">Kopieer als tekst</button>
+        <button class="sess-btn" onclick="copySessionText()">Kopieer als tekst en plak het in de chat</button>
         <span class="sess-copy-ok" id="copy-ok" style="display:none;">Gekopieerd</span>
       </div>
     </div>
