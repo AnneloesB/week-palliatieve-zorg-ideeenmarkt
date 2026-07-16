@@ -109,6 +109,7 @@
   .task-table td{padding:4px 6px;vertical-align:top;}
   .task-table input[type=text],.task-table select{width:100%;font-size:13px;padding:7px 8px;
     border:1.5px solid var(--lt);border-radius:6px;background:#fff;color:var(--tx);}
+  .task-table td select + input[type=text]{margin-top:5px;}
   .task-row-del{background:none;border:none;color:#b55;font-size:16px;cursor:pointer;padding:4px 6px;}
   .add-task-btn{font-size:13px;font-weight:700;color:var(--dk);background:var(--gl);
     border:none;border-radius:18px;padding:8px 16px;cursor:pointer;}
@@ -653,7 +654,7 @@
         <span class="sess-phase-title">Terugkoppeling &amp; afsluiting</span>
       </div>
       <table id="summary-table">
-        <thead><tr><th>Sector</th><th>Kanaal</th><th>Boodschap</th><th>Doelgroep</th><th>Wie</th><th>Wanneer</th><th>Status</th></tr></thead>
+        <thead><tr><th>Sector</th><th>Kanaal</th><th>Middel</th><th>Boodschap</th><th>Doelgroep</th><th>Wie</th><th>Wanneer</th><th>Status</th></tr></thead>
         <tbody id="summary-body"></tbody>
       </table>
       <div id="summary-empty">Nog geen taken ingevuld in de breakout.</div>
@@ -723,12 +724,17 @@ function setMode(mode){
 var SECTOREN = ['RHO', 'VVT', 'Ziekenhuis', 'Ambulance'];
 var SECTOR_BRON = { 'RHO':'Huisartsenzorg', 'VVT':'VVT', 'Ziekenhuis':'Ziekenhuis', 'Ambulance':'Ambulance' };
 var KANALEN = ['Intranet','Nieuwsbrief','Teams/screensaver','Poster/digibord','Social media','Anders'];
+var MIDDELEN = ['Interview','Informatiestand','Artikel','Video','Infographic','Flyer','Kennisquiz','Presentatie/lezing','Poster','Anders'];
 var DOELGROEPEN = ['Zorgverleners','Algemeen publiek','Collega\'s intern'];
 var STATUSSEN = ['Idee','In uitvoering','Klaar'];
-var SESSION_KEY = 'sessieData_v2';
+var SESSION_KEY = 'sessieData_v3';
 
 function emptyTask(){
-  return { kanaal: KANALEN[0], boodschap:'', doelgroep: DOELGROEPEN[0], eigenaar:'', wanneer:'', status: STATUSSEN[0] };
+  return { kanaal: KANALEN[0], kanaalAnders:'', middel: MIDDELEN[0], middelAnders:'', boodschap:'', doelgroep: DOELGROEPEN[0], eigenaar:'', wanneer:'', status: STATUSSEN[0] };
+}
+
+function displayVal(val, andersVal){
+  return val === 'Anders' && andersVal ? 'Anders: ' + andersVal : val;
 }
 
 function loadSession(){
@@ -796,8 +802,8 @@ function buildSectorTabsAndPanels(){
 
     panel.innerHTML = refHtml +
       '<table class="task-table"><thead><tr>' +
-      '<th style="width:16%">Kanaal</th><th style="width:28%">Boodschap</th><th style="width:16%">Doelgroep</th>' +
-      '<th style="width:16%">Wie</th><th style="width:14%">Wanneer</th><th style="width:14%">Status</th><th></th>' +
+      '<th style="width:14%">Kanaal</th><th style="width:14%">Middel</th><th style="width:24%">Boodschap</th><th style="width:14%">Doelgroep</th>' +
+      '<th style="width:12%">Wie</th><th style="width:12%">Wanneer</th><th style="width:10%">Status</th><th></th>' +
       '</tr></thead><tbody id="tbody-' + sector + '"></tbody></table>' +
       '<button class="add-task-btn" onclick="addTask(\'' + sector + '\')">+ Taak toevoegen</button>';
 
@@ -831,6 +837,7 @@ function removeTask(sector, i){
 function updateTask(sector, i, field, value){
   sessionData.sectoren[sector][i][field] = value;
   saveSession();
+  if(field === 'kanaal' || field === 'middel') renderTasks(sector);
 }
 
 function renderTasks(sector){
@@ -839,7 +846,12 @@ function renderTasks(sector){
   var rows = sessionData.sectoren[sector];
   tbody.innerHTML = rows.map(function(row, i){
     return '<tr>' +
-      '<td><select onchange="updateTask(\''+sector+'\','+i+',\'kanaal\',this.value)">' + selectOptions(KANALEN, row.kanaal) + '</select></td>' +
+      '<td><select onchange="updateTask(\''+sector+'\','+i+',\'kanaal\',this.value)">' + selectOptions(KANALEN, row.kanaal) + '</select>' +
+      (row.kanaal === 'Anders' ? '<input type="text" placeholder="Namelijk..." value="'+escapeHtml(row.kanaalAnders)+'" oninput="updateTask(\''+sector+'\','+i+',\'kanaalAnders\',this.value)">' : '') +
+      '</td>' +
+      '<td><select onchange="updateTask(\''+sector+'\','+i+',\'middel\',this.value)">' + selectOptions(MIDDELEN, row.middel) + '</select>' +
+      (row.middel === 'Anders' ? '<input type="text" placeholder="Namelijk..." value="'+escapeHtml(row.middelAnders)+'" oninput="updateTask(\''+sector+'\','+i+',\'middelAnders\',this.value)">' : '') +
+      '</td>' +
       '<td><input type="text" value="'+escapeHtml(row.boodschap)+'" oninput="updateTask(\''+sector+'\','+i+',\'boodschap\',this.value)"></td>' +
       '<td><select onchange="updateTask(\''+sector+'\','+i+',\'doelgroep\',this.value)">' + selectOptions(DOELGROEPEN, row.doelgroep) + '</select></td>' +
       '<td><input type="text" value="'+escapeHtml(row.eigenaar)+'" oninput="updateTask(\''+sector+'\','+i+',\'eigenaar\',this.value)"></td>' +
@@ -870,7 +882,7 @@ function renderSummary(){
   }
   empty.style.display = 'none';
   body.innerHTML = allRows.map(function(r){
-    return '<tr><td>'+r.sector+'</td><td>'+escapeHtml(r.kanaal)+'</td><td>'+escapeHtml(r.boodschap)+'</td><td>'+escapeHtml(r.doelgroep)+'</td><td>'+escapeHtml(r.eigenaar)+'</td><td>'+escapeHtml(r.wanneer)+'</td><td>'+escapeHtml(r.status)+'</td></tr>';
+    return '<tr><td>'+r.sector+'</td><td>'+escapeHtml(displayVal(r.kanaal, r.kanaalAnders))+'</td><td>'+escapeHtml(displayVal(r.middel, r.middelAnders))+'</td><td>'+escapeHtml(r.boodschap)+'</td><td>'+escapeHtml(r.doelgroep)+'</td><td>'+escapeHtml(r.eigenaar)+'</td><td>'+escapeHtml(r.wanneer)+'</td><td>'+escapeHtml(r.status)+'</td></tr>';
   }).join('');
 }
 
@@ -881,7 +893,7 @@ function copySessionText(){
     if(!rows.length) return;
     lines.push(sector + ':');
     rows.forEach(function(r){
-      lines.push('  - [' + r.kanaal + '] ' + r.boodschap + ' | doelgroep: ' + r.doelgroep + ' | wie: ' + r.eigenaar + ' | wanneer: ' + r.wanneer + ' | status: ' + r.status);
+      lines.push('  - [' + displayVal(r.kanaal, r.kanaalAnders) + ' / ' + displayVal(r.middel, r.middelAnders) + '] ' + r.boodschap + ' | doelgroep: ' + r.doelgroep + ' | wie: ' + r.eigenaar + ' | wanneer: ' + r.wanneer + ' | status: ' + r.status);
     });
     lines.push('');
   });
